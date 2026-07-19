@@ -26,6 +26,7 @@ NAT_BIN="$VENV_DIR/bin/nat"
 # Default config file
 CONFIG_FILE="configs/config_web_default_llamaindex.yml"
 PORT=8000
+UI_PORT=3000
 START_OPENSHELL_GATEWAY=false
 BACKEND_PID=""
 FRONTEND_PID=""
@@ -41,6 +42,10 @@ while [[ $# -gt 0 ]]; do
             PORT="$2"
             shift 2
             ;;
+        --ui-port)
+            UI_PORT="$2"
+            shift 2
+            ;;
         --start-openshell-gateway)
             START_OPENSHELL_GATEWAY=true
             shift
@@ -51,6 +56,7 @@ while [[ $# -gt 0 ]]; do
             echo "Options:"
             echo "  --config_file <path>  Path to config file (default: configs/config_web_default_llamaindex.yml)"
             echo "  --port PORT           Backend server port (default: 8000)"
+            echo "  --ui-port PORT        Frontend UI port (default: 3000)"
             echo "  --start-openshell-gateway  Start/verify an authenticated gateway and run its strict capability probe"
             echo "  --help, -h            Show this help message"
             echo ""
@@ -231,12 +237,12 @@ start_frontend() {
     echo "Starting UI Frontend..."
     echo "================================================"
     echo ""
-    echo "Frontend will be available at: http://localhost:3000"
+    echo "Frontend will be available at: http://localhost:${UI_PORT}"
     echo ""
 
     cd "$UI_DIR"
 
-    npm run dev &
+    PORT=$UI_PORT npm run dev &
     FRONTEND_PID=$!
     echo "Frontend PID: $FRONTEND_PID"
 
