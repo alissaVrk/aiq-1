@@ -1,8 +1,11 @@
 {
+  "version": 2,
   "devServer": "auto",
   "devProxy": true,
   "resolveFrom": "frontends/ui",
   "hooksFile": "dazl.hooks.js",
+  "fileNamingConvention": "pascal-case",
+  "visualEditing": "enabled",
   "ignoredSubPaths": [
     "**/node_modules/**",
     "**/dist/**",
