@@ -36,6 +36,15 @@ version_at_least() {
     (( current_patch >= minimum_patch ))
 }
 
+INSTALL_UI=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --install-dev-ui) INSTALL_UI=true; shift ;;
+        *) shift ;;
+    esac
+done
+
 echo "=== AI-Q Blueprint Development Setup ==="
 echo ""
 
@@ -138,14 +147,18 @@ else
     echo ".env file already exists"
 fi
 
-# Setup UI dependencies (optional)
+# Setup UI dependencies (pass --install-dev-ui for dev install, default is npm ci)
 echo ""
 if [ -d "frontends/ui" ]; then
     echo "Setting up UI dependencies..."
     cd frontends/ui
 
     if command -v npm &> /dev/null; then
-        npm ci
+        if [ "$INSTALL_UI" = true ]; then
+            npm install --production=false
+        else
+            npm ci
+        fi
         echo "UI dependencies installed"
     else
         echo "npm not found. Skipping UI setup."
