@@ -36,7 +36,10 @@ dependencies = [
     "nvidia-nat-eval==1.8.0",
     "nvidia-nat-profiler==1.8.0",
     "nvidia-nat-redis==1.8.0",
-    "nvidia-nat-security[guardrails]==1.8.0",
+    # nvidia-nat-security dropped: its plugin unconditionally imports nemoguardrails
+    # (-> annoy, a C++ ext with no prebuilt wheel and no compiler in this environment),
+    # so the plugin fails to load and only emits a warning. Guardrails is opt-in and
+    # unused by the default web profile (config_web_default_llamaindex.yml).
     "deepagents>=0.6.5",
     "langgraph-checkpoint-postgres>=3.0.0",
     "langgraph-checkpoint-sqlite>=2.0.0",
@@ -103,7 +106,8 @@ aiq_deep_researcher = "aiq_agent.agents.deep_researcher.register"
 aiq_fastapi_extensions = "aiq_agent.fastapi_extensions.register"
 aiq_clarifier = "aiq_agent.agents.clarifier.register"
 aiq_data_source_registry = "aiq_agent.common.data_source_registry"
-aiq_guardrails = "aiq_agent.guardrails.register"
+# aiq_guardrails entry point disabled: requires nemoguardrails (annoy/C++ build).
+# aiq_guardrails = "aiq_agent.guardrails.register"
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "sources/**/tests"]
