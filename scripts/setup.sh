@@ -37,10 +37,12 @@ version_at_least() {
 }
 
 INSTALL_UI=false
+SKIP_PRE_COMMIT=false
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         --install-dev-ui) INSTALL_UI=true; shift ;;
+        --skip-pre-commit) SKIP_PRE_COMMIT=true; shift ;;
         *) shift ;;
     esac
 done
@@ -84,8 +86,12 @@ fi
 # Create virtual environment
 echo ""
 echo "Creating virtual environment..."
-"${UV_BIN}" venv --python 3.13 --seed .venv
-echo "Virtual environment created"
+if [ -d ".venv" ] && .venv/bin/python --version 2>&1 | grep -q "^Python 3\.13\."; then
+    echo "Virtual environment already exists with correct Python version"
+else
+    "${UV_BIN}" venv --python 3.13 --seed --clear .venv
+    echo "Virtual environment created"
+fi
 
 # Activate virtual environment
 echo ""
@@ -133,9 +139,13 @@ echo "Data Sources installed"
 
 # Setup pre-commit
 echo ""
-echo "Setting up pre-commit hooks..."
-pre-commit install
-echo "Pre-commit hooks installed"
+if [ "$SKIP_PRE_COMMIT" = true ]; then
+    echo "Skipping pre-commit hooks (--skip-pre-commit)"
+else
+    echo "Setting up pre-commit hooks..."
+    pre-commit install
+    echo "Pre-commit hooks installed"
+fi
 
 # Setup environment file
 echo ""

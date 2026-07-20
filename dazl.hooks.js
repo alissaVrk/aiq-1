@@ -46,18 +46,17 @@ function killTree(child) {
 }
 
 export async function installDependencies() {
-    console.log("RRRRRR DEP DEPENDENCIES");
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     let output = "";
-    const proc = spawn("bash", ["scripts/setup.sh", "--install-dev-ui"], {
+    const proc = spawn("bash", ["scripts/setup.sh", "--install-dev-ui", "--skip-pre-commit"], {
       cwd: PROJECT_ROOT,
       stdio: ["ignore", "inherit", "pipe"],
     });
     proc.stderr?.on("data", (chunk) => { output += chunk.toString(); });
-    proc.on("error", (err) => resolve({ exitCode: 1, output: err.message }));
+    proc.on("error", (err) => reject(err));
     proc.on("close", (code) => {
       if (code === 0) resolve({ exitCode: 0, output: "" });
-      else resolve({ exitCode: 1, output });
+      else reject(new Error(`setup.sh failed (exit ${code}): ${output}`));
     });
   });
 }
@@ -67,6 +66,12 @@ export async function startDev() {
     cwd: PROJECT_ROOT,
     detached: true,
     stdio: "inherit",
+    env: {
+      ...process.env,
+      NEXT_INTERNAL_PORT: "5179",
+      NEXT_INTERNAL_URL: "http://localhost:5179",
+      NODE_ENV: "development",
+    }
   });
 
   proc.on("error", (err) => console.error("[aiq] spawn error:", err));
