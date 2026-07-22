@@ -7,7 +7,7 @@ const fileUploadMaxSizeMB = parseInt(process.env.FILE_UPLOAD_MAX_SIZE_MB || '100
 const inDazl = process.env.RUNNING_IN_DAZL === 'true'
 
 const nextConfig: NextConfig = {
-  allowedDevOrigins: ['*.dazl-preview.ninja', '*.infra-sandbox.dazl-preview.ninja'],
+  allowedDevOrigins: ['*.dazl-preview.ninja', '*.development.dazl-preview.ninja'],
   typescript: {
     ignoreBuildErrors: true,
     ...(inDazl && { tsconfigPath: './tsconfig.dazl.json' }),
