@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "devServer": "none",
+  "devServer": "auto",
   "devProxy": true,
   "resolveFrom": "frontends/ui",
   "hooksFile": "dazl.hooks.js",

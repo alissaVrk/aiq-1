@@ -48,7 +48,7 @@ function killTree(child) {
 export async function installDependencies() {
   return new Promise((resolve, reject) => {
     let output = "";
-    const proc = spawn("bash", ["scripts/setup.sh", "--install-dev-ui", "--skip-pre-commit"], {
+    const proc = spawn("bash", ["scripts/setup.sh", "--install-dev-ui"], {
       cwd: PROJECT_ROOT,
       stdio: ["ignore", "inherit", "pipe"],
     });
